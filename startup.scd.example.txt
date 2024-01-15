@@ -1,0 +1,35 @@
+// ====  Specify which audio device to use =========
+// A list of alternatives is posted when the server boots.
+// For example, uncomment this line if you have an RME interface:
+// Server.local.options.device = "ASIO Fireface"; 
+
+// ====== FonaDyn currently supports only the sample rate 44100 Hz =======
+Server.local.options.sampleRate = 44100;
+// Also make sure your audio hardware really is running at 44100 Hz sample rate,
+// or your operating system may have to do a rate conversion.
+
+// ====== Specify the number of input and output channels =========
+// These can be only one contiguous range,
+// and channel numbers are zero-based.
+// Voice is normally on 0, EGG is normally on 1.
+// To record on, say, three extra channels 9,10,11
+// then you must choose 12 input channels above.
+Server.local.options.numOutputBusChannels = 2;
+Server.local.options.numInputBusChannels = 2;
+
+// ====== Optionally, specify in which directory to store recordings =======
+// Use forward slashes even on Windows.
+// Windows example
+// thisProcess.platform.recordingsDir_("C:/Recordings");
+// macOS example
+// thisProcess.platform.recordingsDir_("/Users/<user>/Documents/Recordings");
+
+// ===== Allow greater complexity of connections =========
+Server.local.options.numWireBufs = 256;
+
+// ===== You can use FonaDyn.config to customize the initial state ======
+// See section 1.4 in the FonaDyn Handbook
+// FonaDyn.config(inputVoice: 0, inputEGG: 1);
+// FonaDyn.config(singerMode: false, fixedAspectRatio: false);
+// FonaDyn.config(runScript: "C:/Recordings/my-script.txt");
+
