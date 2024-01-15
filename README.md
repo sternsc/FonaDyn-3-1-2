@@ -5,9 +5,9 @@
 
 The following procedure performs a basic install, using SuperCollider's default audio device. We recommend that you first unzip the file "FonaDyn Handbook v3-1-2.pdf" and read the chapter "Software Setup". If your computer is centrally managed, show that chapter to your IT support staff. Follow this file only if you are impatient, savvy and have admin rights on your computer.
 
-======== Apple MacOS only =====
+--------- Apple MacOS only -----
 When you run FonaDyn for the first time, the computer must be connected to the Internet, or Apple's safety checks will not work. The FonaDyn plugins for Mac will run on both ARM and Intel CPUs. 
-===============================
+--------------------------------
 
 Once FonaDyn is up and running, you may want to tweak various settings.
 These, too, are described in the FonaDyn Handbook.
