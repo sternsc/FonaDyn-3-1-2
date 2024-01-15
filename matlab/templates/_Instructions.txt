@@ -1,0 +1,56 @@
+TEMPLATES FOR MATLAB ROUTINES
+
+These m-file templates are modified by FonaDyn, so that a number of FonaDyn's settings 
+can become known to Matlab. The settings include:
+- The FonaDyn version number
+- the size of the voice field: min-max in SPL and semitones
+- color mappings for all metrics (to make it easier to adjust the ranges)
+- the sequence of metrics stored in Log files, which may change across versions
+- the number of metrics stored in Log files - not counting the EGG Fourier Descriptors
+
+Run FonaDyn, and while it is still running, execute the command "FonaDyn.refreshMfiles".
+FonaDyn will patch the template files and write the results to the parent directory of this one. 
+To specify a different directory, use FonaDyn.refreshMfiles(<targetDirectory>).
+ 
+The FonaDyn_ Matlab routines use two representations of voice maps: 
+1. a vrp array similar to the _VRP.csv files, with one row per cell, plus a header row vector of strings
+2. a sparse 3D matrix (layers x width x height) for doing matrix operations on maps 
+
+VOICE MAPS
+Load a _VRP.csv file into Matlab as a vrp array: 	FonaDynLoadVRP.m
+Convert a vrp array into a sparse matrix: 		FonaDynMatrixFromVRP.m
+Convert a sparse matrix into a vrp array:		FonaDynVRPFromMatrix.m
+Save a vrp array to a .csv text file:			FonaDynSaveVRP.m
+Plot a VRP from a vrpArray, many options: 		FonaDynPlotVRP.m
+Plot a difference VRP from two vrpArrays: 		FonaDynPlotVRPdiffs.m*
+* not yet completely ported to FonaDyn 3.1
+
+LOG FILES
+Plot selected metrics over time:			FonaDynPlotLogfile.m
+Load a Log file into a 2D array, optionally with	FonaDynLoadLogfile.m
+- conversion of EGG metrics using Fourier resynthesis
+- conversion of absolute FD's to relative FD's
+Make a vrp array AND a sparse matrix from Logfile data:	FonaDynLogfileArrayToVRP.m
+Ditto, but fill the outputs with a selected statistic:	FonaDynLogfileArrayStatsToVRP.m
+				
+EGG WAVEFORMS
+Build arrays of resynthesized EGG waveforms		synthEGGfromArrays.m
+and also of a struct of EGG metrics from those waveforms.
+Plot resynthesized EGG waveforms			plotEGG.m
+
+PHONATION TYPE CENTROID PLOTS
+Make a radar plot of the contents of a _cPhon.csv file	plotPolarCentroids.m
+
+COLOR MAPPINGS
+The color mappings specified in the Metrics classes of FonaDyn 
+are used also to generate colormaps for matlab. 
+See the methods VRPMetric.cMap and VRPMetric.cLims. 
+You may need to refresh these files if you change 
+the number of clusters that you want Matlab to plot. 	FonaDynColors.m, cMapEGG.m, cMapPhon.m
+
+TECH NOTE
+The m-file patching is done by an object of the class MfSC (Matlab from SuperCollider), 
+which is described in the online help system. You can use MfSC to patch matlab code 
+from inside SuperCollider in other projects as well. 
+
+
