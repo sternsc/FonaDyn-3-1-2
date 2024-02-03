@@ -2,3 +2,12 @@ Copyright (C) 2016-2024 by Sten Ternström & Dennis J. Johansson, KTH Stockholm
 Released under European Union Public License v1.2,
 see https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12 .
 
+You are free to modify FonaDyn for your purposes, including commercial purposes, but you must always propagate the copyright notice above, and your documentation must cite the following article: 
+
+Ternström S, Johansson D, Selamtzis A (2018). FonaDyn - a system for real-time analysis of the electroglottogram, over the voice range. SoftwareX number 7, 2018, pp 74-80. DOI: 10.1016/j.softx.2018.03.002
+
+The above is an Open Access article that can be accessed at this link:
+http://linkinghub.elsevier.com/retrieve/pii/S235271101830030X ,
+where also major updates to FonaDyn can be found when available.
+Minor updates can be found at www.kth.se/profile/stern.
+
