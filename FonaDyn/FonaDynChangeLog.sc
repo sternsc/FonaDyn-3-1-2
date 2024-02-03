@@ -12,7 +12,7 @@
 
 + VRPMain {
 	*setMinorVersion {
-		mVersion = "3.1.2c";  // Edit here when adding commits
+		mVersion = "3.1.2";  // Edit here when adding commits
 	}
 }
 
