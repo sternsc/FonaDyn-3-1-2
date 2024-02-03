@@ -1,12 +1,12 @@
 // Copy the entire folder "Test files" in the distribution ZIP
 // to the "Output directory" shown at the top in FonaDyn - then run this script.
-EVAL ~home=thisProcess.platform.recordingsDir ++ "/Test files"
-io.filePathInput=~home ++ "/test_Voice_EGG.wav"
+EVAL ~home=thisProcess.platform.recordingsDir +/+ "Test files"
+io.filePathInput=~home +/+ "test_Voice_EGG.wav"
 cluster.learn=false;
 clusterPhon.learn=false;
-LOAD ~home ++ "/test_cPhon.csv"
-LOAD ~home ++ "/test_cEGG.csv"
-LOAD ~home ++ "/test_VRP.csv"
+LOAD ~home +/+ "test_cPhon.csv"
+LOAD ~home +/+ "test_cEGG.csv"
+LOAD ~home +/+ "test_VRP.csv"
 scope.noiseThreshold=0.2
 scope.duration=4
 sampen.bDrawSpecBal=true
