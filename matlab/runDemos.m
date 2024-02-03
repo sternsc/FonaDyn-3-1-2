@@ -74,6 +74,10 @@ FonaDynPlotVRP(vrpArray, names, 'Qcontact', f, 'ColorBar', 'on', ...
 title ("'Qcontact'; Region on");
 grid on
 
+% printpathname = fullfile(maindir, 'runDemos-Plot map layers.pdf'); 
+% f.PaperOrientation = 'portrait';
+% print('-painters','-dpdf', printpathname);
+
 %% EXAMPLES OF PLOTTING EGG CLUSTERS
 f = figure ('Units', 'centimeters', 'Position', [1, 1, 20, 24]);
 t = tiledlayout(4, 2);
@@ -88,7 +92,7 @@ title(t, tstr, 'Interpreter', 'none');
 mapFilePath = fullfile(maindir, mapFileName);
 [names, vrpArray] = FonaDynLoadVRP(mapFilePath); 
 
-% Plot the map with all EGG clusters
+% Plot the map of all EGG clusters
 nexttile
 FonaDynPlotVRP(vrpArray, names, 'maxCluster', f, 'MinCycles', 5, 'PlotHz', 'on', 'ColorBar', 'on');
 title ("'maxCluster' shows all 5 clusters ");
@@ -130,6 +134,10 @@ ax.YDir = 'reverse';
 plotEGG(egg, eggCentroidFileName, f); 
 grid on
 
+% printpathname = fullfile(maindir, 'runDemos-Plot EGGs.pdf'); 
+% f.PaperOrientation = 'portrait';
+% print('-painters','-dpdf', printpathname);
+
 %% EXAMPLES OF PLOTTING PHONATION TYPE CLUSTERS
 f = figure ('Units', 'centimeters', 'Position', [1, 1, 20, 24]);
 t = tiledlayout('flow');
@@ -142,7 +150,7 @@ title(t, tstr, 'Interpreter', 'none');
 mapFilePath = fullfile(maindir, mapFileName);
 [names, vrpArray] = FonaDynLoadVRP(mapFilePath); 
 
-% All phonation-type clusters
+% All clusters
 nexttile
 FonaDynPlotVRP(vrpArray, names, 'maxCPhon', f, 'MinCycles', 5, 'PlotHz', 'on', 'ColorBar', 'on');
 title ("'maxCPhon' shows all phon clusters ");
@@ -184,24 +192,34 @@ FonaDynPlotVRP(vrpArray, names, 'cPhon 6', f, 'PlotHz', 'on', 'ColorBar', 'on');
 title ("'Cluster 6'");
 grid on
 
-% Make a polar plot of the centroids, in a separate window
-f2 = figure;
-theTable = plotPolarCentroids(phonCentroidPath, f2); 
+% printpathname = fullfile(maindir, 'runDemos-Plot phonation types.pdf'); 
+% f.PaperOrientation = 'portrait';
+% print('-painters','-dpdf', printpathname);
+
+fig2 = figure;
+theTable = plotPolarCentroids(phonCentroidPath, fig2); 
+
+% printpathname = fullfile(maindir, 'runDemos-Phonation types radar plot.pdf'); 
+% fig2.PaperOrientation = 'portrait';
+% print('-painters','-dpdf', printpathname);
+
 
 %% EXAMPLE OF PLOTTING A LOG FILE
 
 logFileName = 'Test_Log.aiff';
 tstr = sprintf("Log file %s", logFileName);
 f = figure ('Name',tstr, 'NumberTitle','off', 'Units', 'centimeters', 'Position', [1, 1, 20, 24]);
+title(tstr, 'Interpreter', 'none');
 
 logFilePath = fullfile(maindir, logFileName);
-tracks = [1 2 5 7 8 11 12 10];
-starttime = 0.1;
-stoptime = 26.0;
+tracks = [1 2 4 5 7 8 12];
 
-FonaDynPlotLogfile(logFilePath, [starttime stoptime], tracks);
+FonaDynPlotLogfile(logFilePath, [0.1 26.0], [1 2 5 7 8 11 12 10]);
 
-title(tstr, 'Interpreter', 'none');
+% printpathname = fullfile(maindir, 'runDemos-Plot log file.pdf'); 
+% f.PaperOrientation = 'portrait';
+% print('-painters','-dpdf', printpathname);
+
 
 %% A PEEK AT THE FIRST 4 FOURIER DESCRIPTORS OF THE EGG CYCLES
 % This code assumes that there are 10 harmonics in the Log file

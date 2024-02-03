@@ -10,3 +10,7 @@ where you can customize them further as you wish.
 The m-file "runDemos.m" plots a series of examples. 
 In that file, set the variable "maindir" to the folder
 where you have stored the supplied "Test files". 
+
+The pdf files in this folder are generated 
+by different sections in the runDemos.m script. 
+
