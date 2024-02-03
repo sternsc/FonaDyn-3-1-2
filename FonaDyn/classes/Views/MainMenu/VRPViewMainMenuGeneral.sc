@@ -139,18 +139,18 @@ VRPViewMainMenuGeneral {
 
 	stash { | settings |
 		var gs = settings.general;
-		oldSettings = settings.deepCopy;
 		mbSettingsLoaded = true;
-		mStaticTextOutputDirectoryPath.string_(gs.output_directory);
+		mStaticTextOutputDirectoryPath.string_(gs.output_directory.tr($\\, $/));
 	}
 
 	fetch { | settings |
 		var gs = settings.general;
-		var cs = settings.csdft;
 
 		if (settings.waitingForStash, {
 			this.stash(settings);
 		});
+
+		oldSettings = settings.deepCopy;
 
 		gs.layout = switch( (mListShowAs.value ? 0),
 			0, VRPViewMain.layoutGrid,
@@ -173,16 +173,18 @@ VRPViewMainMenuGeneral {
 			5, VRPViewMain.stackTypeSignal
 		);
 
+		gs.output_directory = mStaticTextOutputDirectoryPath.string;
 
 		if (bSettingsChanged, {
 			// Keep data UNLESS .clarityThreshold has changed
 // 			bTempKeepData = settings.io.keepData;
 // 			settings.io.keepData = true; // (settings.vrp.clarityThreshold == newSettings.vrp.clarityThreshold);
 
-			cs.method_(newSettings.csdft.method);
+			settings.csdft.method = newSettings.csdft.method;
 			settings.vrp.clarityThreshold = newSettings.vrp.clarityThreshold;
 			settings.vrp.wantsContextSave = newSettings.vrp.wantsContextSave;
 			settings.io.enabledEGGlisten = newSettings.io.enabledEGGlisten;
+			settings.io.enabledWriteLog = newSettings.io.enabledWriteLog;
 			settings.io.writeLogFrameRate = newSettings.io.writeLogFrameRate;
 			settings.io.keepInputName = newSettings.io.keepInputName;
 			settings.io.enabledWriteGates = newSettings.io.enabledWriteGates;
@@ -194,7 +196,6 @@ VRPViewMainMenuGeneral {
 			settings.general.enabledDiagnostics = newSettings.general.enabledDiagnostics;
 			settings.general.colorThemeKey = newSettings.general.colorThemeKey;
 			settings.general.saveSettingsOnExit = newSettings.general.saveSettingsOnExit;
-			settings.csdft.method = newSettings.csdft.method;
 			// settings.vrp.bSingerMode = newSettings.vrp.bSingerMode;
 			// this.changed(this, \splRangeChanged, settings.vrp.bSingerMode);
 
@@ -203,8 +204,6 @@ VRPViewMainMenuGeneral {
 			bSettingsChanged = false;
 			mbSettingsLoaded = false;
 		});
-
-		gs.output_directory = mStaticTextOutputDirectoryPath.string;
 	}
 
 	updateData { | data |
@@ -212,7 +211,7 @@ VRPViewMainMenuGeneral {
 
 		if (bSettingsChanged.not and: (mbSettingsLoaded.not), { oldSettings = data.settings });
 		if (data.general.starting, { mButtonSettingsDialog.enabled = false; }); // Disable when starting
-		if (data.general.stopping, { mButtonSettingsDialog.enabled = true;  }); // Enable when starting
+		if (data.general.stopping, { mButtonSettingsDialog.enabled = true;  }); // Enable when stopping
 
 		if (dsg.guiChanged, {
 			mView.background_(dsg.getThemeColor(\backPanel));

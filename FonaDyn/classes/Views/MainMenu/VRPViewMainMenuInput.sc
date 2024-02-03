@@ -106,19 +106,19 @@ VRPViewMainMenuInput {
 		.fixedHeight_(35)
 		.stringColor_(Color.white);
 
-		mListInputType = ListView(mView, Rect())		// (0, 0, 100, 0)
+		mListInputType = ListView(mView, Rect(0, 0, 100, 0))
 		.items_([
 			"Live signals",
 			"From file",
 			"Batch multiple files",
 			"Run script"
-		])
-		.font_(static_font);
+		]);
 
 		mListInputType
 		.fixedHeight_(mListInputType.minSizeHint.height * 0.65)
 		.fixedWidth_(mListInputType.minSizeHint.width * 1.5)
 		.selectionMode_(\single)
+		.font_(static_font)
 		.action_({ | list |
 			var is_recording = list.value == fromRecording;
 			var is_from_file = list.value == fromSingleFile;
@@ -135,8 +135,6 @@ VRPViewMainMenuInput {
 			mButtonAddFilePath.visible_(is_from_batched_files);
 			mButtonRemoveFilePath.visible_(is_from_batched_files);
 			mListBatchedFilePaths.visible_(is_from_batched_files);
-
-			this.updateMenu();
 		});
 
 		//////////////////////////////////////////////////////////
@@ -475,7 +473,7 @@ VRPViewMainMenuInput {
 	stash { | settings |
 		var str = settings.io.filePathInput ? "";
 		if (str.notEmpty, {
-			mStaticTextFilePath.string_(str)
+			mStaticTextFilePath.string_(str.tr($\\, $/))
 		});
 		mLastPath = settings.general.output_directory;
 		mCheckBoxKeepData.value_(settings.io.keepData);
@@ -512,26 +510,28 @@ VRPViewMainMenuInput {
 			mButtonStart.value = waitingForStop;
 		});
 
-		ios.inputType = switch ( mListInputType.value,
-			fromRecording, VRPSettingsIO.inputTypeRecord,
-			fromSingleFile, VRPSettingsIO.inputTypeFile,
-			fromMultipleFiles, VRPSettingsIO.inputTypeFile,
-			fromScript, VRPSettingsIO.inputTypeScript
-		);
+		if (mListInputType.value.notNil, {
+			ios.inputType = switch ( mListInputType.value,
+				fromRecording, VRPSettingsIO.inputTypeRecord,
+				fromSingleFile, VRPSettingsIO.inputTypeFile,
+				fromMultipleFiles, VRPSettingsIO.inputTypeFile,
+				fromScript, VRPSettingsIO.inputTypeScript
+			);
 
-		ios.filePathInput = switch ( mListInputType.value,
-			fromSingleFile, {
-				mStaticTextFilePath.string
-			},
+			ios.filePathInput = switch ( mListInputType.value,
+				fromSingleFile, {
+					mStaticTextFilePath.string
+				},
 
-			fromMultipleFiles, {
-				(mListBatchedFilePaths.items ?? [])[mThisIndex]
-			},
+				fromMultipleFiles, {
+					(mListBatchedFilePaths.items ?? [])[mThisIndex]
+				},
 
-			fromScript, { "" }  // don't try to open the script text as a signal
-		);
+				fromScript, { "" }  // don't try to open the script text as a signal
+			);
+		});
 
-		// Check the bit depth of the chosen input file, if any
+/*		// Check the bit depth of the chosen input file, if any
 		if (ios.filePathInput.notNil, {
 			var f = SoundFile.new;
 			var fn = PathName(ios.filePathInput).fileName;
@@ -544,19 +544,18 @@ VRPViewMainMenuInput {
 			});
 			f.close;
 		});
-
+*/
 		ios.keepData = mCheckBoxKeepData.value;
-		this.updateMenu();
 	}
 
 	updateData { | data |
 		var iod = data.io;
+		var ios = data.settings.io;
 		var gd = data.general;
 		var gs = data.settings.general;
 
 		// Did we previously attempt to start the server?
-		//		if ( (mButtonStart.value == waitingForStart) and: gd.starting.not, {
-		if ( (mButtonStart.value == waitingForStart) and: gd.started, {
+		if ( (mButtonStart.value == waitingForStart) and: gd.starting.not, {
 			if (this.scriptState == iHeld, {
 				this.scriptState_(iRunning);
 			});
@@ -564,7 +563,22 @@ VRPViewMainMenuInput {
 			mClockStep = 1;
 			mButtonStart.value_( if (gd.started, canStop, canStart) );
 			if (mListInputType.value > fromRecording, {
-				var s = PathName(data.settings.io.filePathInput);
+				var s = PathName(ios.filePathInput);
+
+				// Check if we are analyzing a 16-bit file, and if so inhibit singerMode
+				var bSingerMode = (VRPDataVRP.nMaxSPL > 120);
+				if (bSingerMode, {
+					var f = SoundFile.new;
+					f.openRead(ios.filePathInput);
+					// Is the file's word length 16 or 24 bits?
+					if (f.sampleFormat == "int16", {
+						var fn = PathName(ios.filePathInput).fileName;
+						format("% is a 16-bit file: switching to 120 dB max SPL", fn).warn;
+						this.changed(this, \splRangeChanged, false);
+					});
+					f.close;
+				});
+
 				format("Analyzing %, in %", s.fileName, s.pathOnly).postln;
 			});
 		});
@@ -595,10 +609,11 @@ VRPViewMainMenuInput {
 			// ...and we're using batching, and still have items left
 			// Then immediately start the next file
 			if ( (mListInputType.value == fromMultipleFiles)
-			and: (mThisIndex < (mListBatchedFilePaths.items ?? []).size), {
+				and: (mThisIndex < (mListBatchedFilePaths.items ?? []).size), {
 				mButtonStart.value_(setStart);
 				mListBatchedFilePaths.selection = mThisIndex.asArray;
 			});
+
 			// ...and we're running a script,
 			// and are ready to process the next file
 			// then continue when server has started again
@@ -646,10 +661,11 @@ VRPViewMainMenuInput {
 			mCheckBoxKeepData.palette = mCheckBoxKeepData.palette.window_(gs.getThemeColor(\backPanel));
 		});
 
-		this.updateMenu();
+		this.updateMenu;
 	}
 
 	//////////////////////////////////////////////////
+	///  SCRIPT ENGINE
 	//////////////////////////////////////////////////
 
 	loadScript { arg scriptFile;
@@ -700,7 +716,7 @@ VRPViewMainMenuInput {
 					switch (x,
 						1, {
 							settings.edit(str); // Parse the .settings assignment in str
-							settings.waitingForStash_(true);  // asynchronous, has problems
+							settings.waitingForStash_(true);
 						},
 
 						2, {// HOLD
@@ -721,7 +737,7 @@ VRPViewMainMenuInput {
 						},
 
 						4, {	// LOAD _cEGG.csv, _cPhon.csv, or _VRP.csv
-							fName = interpret(str[5..]);
+							fName = interpret(str[5..]).tr($\\, $/);
 							case
 							{ VRPDataCluster.testSuffix(fName) } {
 								var c, h, sc, tmpDC;

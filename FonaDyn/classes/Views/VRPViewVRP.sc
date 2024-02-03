@@ -185,7 +185,7 @@ VRPViewVRP{
 
 	mapSwitches {
 		if (mClusterSelected.isNil, { "mClusterSelected was nil".warn} );  //// for debug only
-		^[mLayerSelected, mnClusters ? 5, mClusterSelected ? 0, mMapFileName ]
+		^[mLayerSelected, mnClusters ? 5, mClusterSelected ? 0, mMapFileName, mGridHorzGridSelectHz ]
 	}
 
 	mapMode { ^mMapMode }
@@ -720,7 +720,8 @@ VRPViewVRP{
 		if (vrpCopy.notNil, {
 			var layer, sliderPos, fileStr;
 			mVRPdata = vrpCopy.mVRPdata.deepCopy;
-			#layer, mnClusters, mClusterSelected, fileStr = vrpCopy.mapSwitches;
+			#layer, mnClusters, mClusterSelected, fileStr, mGridHorzGridSelectHz = vrpCopy.mapSwitches;
+			this.setSPLscale;
 			mDropDownType.valueAction_(layer);
 			sliderPos = (mClusterSelected/mnClusters).round(0.01);
 			mSliderCluster.value_(sliderPos);

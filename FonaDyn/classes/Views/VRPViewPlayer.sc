@@ -399,7 +399,7 @@ VRPViewPlayer {
 		if (settings.io.inputType != VRPSettingsIO.inputTypeFile, { ^-2 });
 
 		// Test the following only if a new signal file has been specified
-		strSig = settings.io.filePathInput;
+		strSig = settings.io.filePathInput.tr($\\, $/);
 		if (signalPathName != strSig, {
 			// A signal file must have been chosen
 			if (strSig.isNil or: (strSig.size < 14), { ^-3 });
@@ -410,7 +410,7 @@ VRPViewPlayer {
 			if (File.exists(strSig).not, { ^-5 });
 
 			// A log-file with a matching name must also exist
-			strLog = strSig[0..posSig] ++ "Log.aiff";
+			strLog = (strSig[0..posSig] ++ "Log.aiff").tr($\\, $/);
 			if (File.exists(strLog).not, { ^-6 });
 
 			// Check also that the logFile was modified

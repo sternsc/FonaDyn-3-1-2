@@ -160,6 +160,11 @@ VRPViewMovingEGG {
 		ss.movingEGGSamples = mNumberBoxSamples.value;
 		ss.isVisible = (mView.visible);
 		settings.scope.noiseThreshold = mNumberBoxThreshold.value;
+
+		// Noise thresholding is not performed during recording, so hide those controls
+		[mStaticTextThreshold, mNumberBoxThreshold].do { |ctl |
+			ctl.visible_(settings.io.inputType != VRPSettingsIO.inputTypeRecord())
+		};
 	}
 
 	updateData { | data |
@@ -198,6 +203,15 @@ VRPViewMovingEGG {
 
 		mStaticTextMethod.string_(if (s.csdft.method == VRPSettingsCSDFT.methodPhasePortrait, "Φ", "Λ"));
 
+		// Noise thresholding is not performed during recording, so hide those controls
+		// [mStaticTextThreshold, mNumberBoxThreshold].do { |ctl |
+		// 	ctl.visible_(s.io.inputType != VRPSettingsIO.inputTypeRecord())
+		// };
+
+		// Noise thresholding must not be changed during fixed analysis
+		mNumberBoxThreshold.enabled_(gd.started.not or: s.vrp.wantsContextSave.not);
+		mNumberBoxThreshold.background_( mNumberBoxThreshold.enabled.if (Color.white, Color.gray));
+
 		[
 			mButtonNormalize,
 			mNumberBoxSamples,
@@ -205,12 +219,6 @@ VRPViewMovingEGG {
 		]
 		do: { | x | x.enabled_(gd.started.not); };
 
-		// Noise thresholding is not performed during recording, so disable changes
-
-		mNumberBoxThreshold.enabled_(
-			(s.io.inputType != VRPSettingsIO.inputTypeRecord())
-			and: (if (gd.started, { s.vrp.wantsContextSave.not }, true))   // disallow changes during run
-		);
 
 		this.showDiagnostics(dsg.enabledDiagnostics);
 

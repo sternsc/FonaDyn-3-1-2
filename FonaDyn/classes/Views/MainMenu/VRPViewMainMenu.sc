@@ -55,6 +55,7 @@ VRPViewMainMenu {
 	}
 
 	stash { | settings |
+		// REPLACED BY CALLS TO STASH WITHIN ALL .fetch METHODS
 		// [
 		// 	mVRPViewInput,
 		// 	mVRPViewGeneral,
@@ -68,8 +69,8 @@ VRPViewMainMenu {
 
 	fetch { | settings |
 		[
+			mVRPViewInput,  // First, because it parses scripts
 			mVRPViewGeneral,
-			mVRPViewInput,
 			mVRPViewOutput
 		]
 		do: { | v |

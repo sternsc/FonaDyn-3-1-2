@@ -47,10 +47,10 @@ VRPData {
 		lineStr = Date.localtime.format("//// Created %H:%M:%S, %Y-%m-%d");
 		lines.add(lineStr);
 
-		lineStr = "general.output_directory=\"" ++ settings.general.output_directory ++ $";
+		lineStr = "general.output_directory=" ++ settings.general.output_directory.quote;
 		lines.add(lineStr);
 
-		lineStr = "io.filePathInput=\"" ++ settings.io.filePathInput ++ $";
+		lineStr = "io.filePathInput=" ++ settings.io.filePathInput.tr($\\, $/).quote;
 		lines.add(lineStr);
 
 		lineStr = "io.enabledWriteLog=" ++ settings.io.enabledWriteLog.asString;
@@ -74,15 +74,13 @@ VRPData {
 		lineStr = "clusterPhon.learn=false";
 		lines.add(lineStr);
 
-		quotedPath = "\"" ++ settings.cluster.filePath ++ "\"";
-		lineStr = "LOAD " ++ quotedPath;
+		lineStr = "LOAD " ++ settings.cluster.filePath.tr($\\, $/).quote;
 		lines.add(lineStr);
 
-		quotedPath = "\"" ++ settings.clusterPhon.filePath ++ "\"";
-		lineStr = "LOAD " ++ quotedPath;
+		lineStr = "LOAD " ++ settings.clusterPhon.filePath.tr($\\, $/).quote;
 		lines.add(lineStr);
 
-		quotedPath = "\"" ++ mapPathName ++ "\"";
+		quotedPath = mapPathName.tr($\\, $/).quote;
 		lineStr = "LOAD " ++ quotedPath;
 		lines.add(lineStr);
 

@@ -92,7 +92,7 @@ VRPSDIO {
 				bClip = PeakFollower.ar(inEGG.abs.madd(1, 0.005), 0.9999) - 1;
 				SendTrig.ar(bClip, triggerIDClip, bClip);			    // Tell main about clipping
 
-				micCond = HPF.ar(inMic, 30);				            // HPF +12 db/oct to remove rumble
+				micCond = HPF.ar(inMic, 30);				            // HPF +12 db/oct to attenuate rumble
 				eggCond   = Convolution2.ar(inEGG, hpBuffer.bufnum, 0, 1024);	// HP @100 Hz
 				eggCond	= Median.ar(9, eggCond);											// suppress EG2 "crackle"
 				eggCond = Convolution2.ar(eggCond, lpBuffer.bufnum, 0, lpBuffer.numFrames);	// LP @10 kHz

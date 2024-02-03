@@ -120,7 +120,7 @@ VRPSettings {
 	edit { | assignment |
 		var cmdStr, fnCmd;
 		// Compiles and runs a line of code
-		// that usually sets a member variable
+		// that usually sets a member variable of 'this'
 		cmdStr = "arg s; s." ++ assignment;
 		fnCmd = cmdStr.compile;  // This works only in SC 3.13.0 and higher - reliably?
 		fnCmd.(this);

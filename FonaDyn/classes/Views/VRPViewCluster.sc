@@ -706,6 +706,7 @@ VRPViewCluster {
 		cs.learn = (mButtonLearn.value == iLearn);
 		cs.autoReset = (mButtonReset.value == iAutoReset);
 		cs.nHarmonics_(mNumberBoxHarmonics.value.asInteger);
+		settings.csdft.nHarmonics_(mNumberBoxHarmonics.value.asInteger);
 
 		nCpost = mNumberBoxClusters.value.asInteger;
 		if (nCpre != nCpost, {
