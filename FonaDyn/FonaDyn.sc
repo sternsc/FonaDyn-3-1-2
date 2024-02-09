@@ -184,7 +184,7 @@ FonaDyn {
 	*install_osx {
 		var retval = false;
 		// Rename the original PitchDetection.scx so that ours becomes the active one
-		var scxName = "PitchDetection.scx";
+		var scxName = "PitchDetection/PitchDetection.scx";
 		var destPath;
 		var cmdLine;
 
@@ -207,13 +207,13 @@ FonaDyn {
 	*uninstall_osx {
 		var retval = false;
 		// Restore the name of the original PitchDetection.scx
-		var scxName = "PitchDetection.scx";
+		var scxName = "PitchDetection/PitchDetection.scx";
 		var srcPath, destPath;
 		var cmdLine;
 		destPath = ~plugsExtensions +/+ "SC3plugins" +/+ scxName;
 		srcPath = destPath ++ ".original";
 		if (File.exists(srcPath), {
-			cmdLine = "m" + srcPath.quote + destPath.quote;
+			cmdLine = "mv" + srcPath.quote + destPath.quote;
 			cmdLine.postln;
 			cmdLine.unixCmd;
 			postln (scxName + "restored.");
